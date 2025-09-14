@@ -11,7 +11,12 @@ public class Main {
         System.out.println(secondPolynomial.f(5));
 
         TrapezoidMethod trapezoidMethod = new TrapezoidMethod(x -> x*x*x+2*x*x-8*x-1,4, 0, 16);
-        System.out.println(trapezoidMethod.calculate());
+        System.out.println(trapezoidMethod.calculate() + " trapezoid");
 
+        MonteCarloMethod monteCarloMethod = new MonteCarloMethod(x -> x*x*x+2*x*x-8*x+1, 4, 0, 16);
+        System.out.println(monteCarloMethod.calculate() + " monte carlo");
+
+        AnyFunction anyFunction = new AnyFunction(x -> Math.sin(x)*2);
+        System.out.println(anyFunction.f(150));
     }
 }
