@@ -18,5 +18,74 @@ public class Main {
 
         AnyFunction anyFunction = new AnyFunction(x -> Math.sin(x)*2);
         System.out.println(anyFunction.f(150));
+
+        Double[] x = {1.0,2.0,3.0,4.0};
+        Double[] y = {8.0,9.0,10.0,15.0};
+
+        System.out.println(LagrangeInterpolation.interpolation(x,y, 5) + " result");
+
+        LagrangeInterpolatedFunction lagrangeInterpolatedFunction = LagrangeInterpolatedFunction.fromCsv("src/main/resources/points.csv");  // without /java/ in path
+
+        System.out.println(lagrangeInterpolatedFunction.f(2));
+
+        TrapezoidMethod lagrangeIntegral = new TrapezoidMethod(lagrangeInterpolatedFunction, 4, 0 , 16);
+
+
+
+        //System.out.println(lagrangeIntegral.calculate() + " lagrange integral");
+
+        //doCheckTrapezoid(lagrangeIntegral);
+
+        MonteCarloMethod lagrangeIntegralMonteCarlo = new MonteCarloMethod(lagrangeInterpolatedFunction, 4, 0 , 16);
+        //System.out.println(lagrangeIntegralMonteCarlo.calculate() + " lagrange integral");
+        //doCheckMonteCarlo(lagrangeIntegralMonteCarlo);
+
+
     }
+
+    public static void doCheckMonteCarlo(MonteCarloMethod monteCarloMethod) {
+        boolean monteCarloIntegralActive = false;
+
+        if (monteCarloMethod.calculate() != 0.0){
+            monteCarloIntegralActive = true;
+        }
+        LagrangeInterpolatedFunction lagrangeInterpolatedFunction = LagrangeInterpolatedFunction.fromCsv("src/main/resources/points.csv");
+
+        Double[] sortedXCord = lagrangeInterpolatedFunction.getSortedxCord();
+
+        for (int i = 0; i < sortedXCord.length; i++){
+            if (monteCarloIntegralActive){
+                if (!(monteCarloMethod.lowLimit >= sortedXCord[1] && monteCarloMethod.highLimit <= sortedXCord[sortedXCord.length - 1])){
+                    throw new IllegalArgumentException("Not in range of integral");
+                }
+            }
+        }
+
+
+
+    }
+
+
+    public static void doCheckTrapezoid(TrapezoidMethod trapezoidMethod){
+        boolean lagrangeIntegralActive = false;
+
+        if  (trapezoidMethod.calculate() != 0.0){
+            lagrangeIntegralActive = true;
+        }
+        LagrangeInterpolatedFunction lagrangeInterpolatedFunction = LagrangeInterpolatedFunction.fromCsv("src/main/resources/points.csv");
+
+        Double[] sortedXCord = lagrangeInterpolatedFunction.getSortedxCord();
+
+        for (int i = 0; i < sortedXCord.length; i++){
+            if (lagrangeIntegralActive){
+                if (!(trapezoidMethod.lowLimit >= sortedXCord[1] && trapezoidMethod.highLimit <= sortedXCord[sortedXCord.length - 1])){
+                    throw new IllegalArgumentException("Not in range of integral");
+                }
+            }
+        }
+
+    }
+
+
 }
+
